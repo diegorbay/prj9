@@ -18,7 +18,7 @@ Encoder encoder1;
 #define QUAD_BOTTOM_PORT2 5
 Encoder encoder2;
 #define LIMIT_SWITCH 6
-
+Ultrasonic sensor;
 
 void autonomous();
 

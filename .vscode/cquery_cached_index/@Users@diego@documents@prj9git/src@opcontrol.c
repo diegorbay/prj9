@@ -56,6 +56,21 @@ void clawSet(int speed) {
 	motorSet(7, -speed);
 }
 
+void follow1d(){
+  while(!(joystickGetDigital(1, 8, JOY_RIGHT))){
+    printf("The Ultrasonic sensor value is %d \n", ultrasonicGet(sensor));
+    if(ultrasonicGet(sensor)<100){
+      motorSet(2, -30);
+      motorSet(3, -30);
+    }else if(ultrasonicGet(sensor)>100){
+      motorSet(2, 30);
+      motorSet(3, 30);
+    }else{
+      motorSet(2, 0);
+      motorSet(3, 0);
+    }
+  }
+}
 void operatorControl() {
   int power;
   int turn;
@@ -85,6 +100,10 @@ void operatorControl() {
         wristSet(-63);
       }else{
         wristSet(0);
+      }
+
+      if(joystickGetDigital(1, 8, JOY_LEFT)){
+        follow1d();
       }
 
         power = joystickGetAnalog(1, 2); // vertical axis on left joystick
