@@ -71,32 +71,6 @@ void follow1d(){
     }
   }
 }
-
-void follow2d(){
-  while(!(joystickGetDigital(1, 8, JOY_RIGHT))){
-    printf("The Ultrasonic sensor value is %d \n", ultrasonicGet(sensor));
-    while(ultrasonicGet(sensor)>200 || ultrasonicGet(sensor)==-1){
-      motorSet(2, -40);
-      motorSet(3, 40);
-    }
-    if(ultrasonicGet(sensor)==-1 || ultrasonicGet(sensor)>200){
-      while (ultrasonicGet(sensor)>200 || ultrasonicGet(sensor)==-1){
-        motorSet(2, -40);
-        motorSet(3, 40);
-      }
-    }else if(ultrasonicGet(sensor)<100){
-      motorSet(2, -40);
-      motorSet(3, -40);
-    }else if(ultrasonicGet(sensor)>100){
-      motorSet(2, 30);
-      motorSet(3, 30);
-    }else{
-      motorSet(2, 0);
-      motorSet(3, 0);
-    }
-  }
-}
-
 void operatorControl() {
   int power;
   int turn;
