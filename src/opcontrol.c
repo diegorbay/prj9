@@ -2,7 +2,8 @@
 int con = 2;
 int target;
 int target2;
-
+int speed;
+bool check;
 
 void homeShoulder(int homePosition) {
 printf("homing started, stand by \n");
@@ -39,8 +40,8 @@ void homeElbow(int homePosition){
 
 
 void chassisSet(int left, int right) {
-  motorSet(2, left);
-  motorSet(3, right);
+  motorSet(2, right);
+  motorSet(3, left);
 }
 
 
@@ -75,26 +76,51 @@ void follow1d(){
 void follow2d(){
   while(!(joystickGetDigital(1, 8, JOY_RIGHT))){
     printf("The Ultrasonic sensor value is %d \n", ultrasonicGet(sensor));
-    while(ultrasonicGet(sensor)>200 || ultrasonicGet(sensor)==-1){
-      motorSet(2, -40);
-      motorSet(3, 40);
-    }
-    if(ultrasonicGet(sensor)==-1 || ultrasonicGet(sensor)>200){
-      while (ultrasonicGet(sensor)>200 || ultrasonicGet(sensor)==-1){
-        motorSet(2, -40);
-        motorSet(3, 40);
+
+    if(ultrasonicGet(sensor)==-1 || ultrasonicGet(sensor)>250){
+      if(check){
+        motorSet(2, -60);
+        motorSet(3, 60);
+      }else{
+        check=true;
       }
-    }else if(ultrasonicGet(sensor)<100){
-      motorSet(2, -40);
-      motorSet(3, -40);
-    }else if(ultrasonicGet(sensor)>100){
-      motorSet(2, 30);
-      motorSet(3, 30);
+    }else if(ultrasonicGet(sensor)<85){
+      check=false;
+      speed = (115-ultrasonicGet(sensor));
+      motorSet(2, -speed);
+      motorSet(3, -speed);
+      printf("**** %d \n", ultrasonicGet(sensor));
+    }else if(ultrasonicGet(sensor)>115){
+      check=false;
+      speed = (ultrasonicGet(sensor)-85);
+      motorSet(2, speed);
+      motorSet(3, speed);
+      print("check less greater than 100");
     }else{
+      check=false;
       motorSet(2, 0);
       motorSet(3, 0);
+      print("check else");
     }
   }
+}
+
+void lineFollow(){
+  while(!(joystickGetDigital(1, 5, JOY_DOWN))){
+if(analogReadCalibrated(2)>analogReadCalibrated(1) &&analogReadCalibrated(2)>analogReadCalibrated(3)){
+  motorSet(2, 30);
+  motorSet(3, 30);
+}else if(analogReadCalibrated(3)>analogReadCalibrated(1) && analogReadCalibrated(3)>=analogReadCalibrated(2)){
+  motorSet(2,-70);
+  motorSet(3, 40);
+}else if(analogReadCalibrated(1)>analogReadCalibrated(3) && analogReadCalibrated(1)>=analogReadCalibrated(2)){
+  motorSet(2, 40);
+  motorSet(3,-70);//left
+}else{
+  motorSet(2, 30);
+  motorSet(3, 30);
+}
+}
 }
 
 void operatorControl() {
@@ -102,7 +128,7 @@ void operatorControl() {
   int turn;
 
     while (1) {
-
+printf("The Ultrasonic sensor value is %d \n", ultrasonicGet(sensor));
 
       if(joystickGetDigital(1, 8, JOY_UP)){
         homeShoulder(180);
@@ -129,7 +155,11 @@ void operatorControl() {
       }
 
       if(joystickGetDigital(1, 8, JOY_LEFT)){
-        follow1d();
+        follow2d();
+      }
+
+      if(joystickGetDigital(1, 5, JOY_UP)){
+        lineFollow();
       }
 
         power = joystickGetAnalog(1, 2); // vertical axis on left joystick

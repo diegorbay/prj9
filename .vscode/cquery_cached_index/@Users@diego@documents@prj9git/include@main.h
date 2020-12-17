@@ -19,6 +19,10 @@ Encoder encoder1;
 Encoder encoder2;
 #define LIMIT_SWITCH 6
 
+#define LINE_TRACKER_PORT 1
+#define DRIVE_MOTOR_LEFT 1
+#define DRIVE_MOTOR_RIGHT 2
+
 Ultrasonic sensor;
 
 void autonomous();

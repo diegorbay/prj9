@@ -2,7 +2,8 @@
 int con = 2;
 int target;
 int target2;
-
+int speed;
+bool check;
 
 void homeShoulder(int homePosition) {
 printf("homing started, stand by \n");
@@ -71,12 +72,45 @@ void follow1d(){
     }
   }
 }
+
+void follow2d(){
+  while(!(joystickGetDigital(1, 8, JOY_RIGHT))){
+    printf("The Ultrasonic sensor value is %d \n", ultrasonicGet(sensor));
+
+    if(ultrasonicGet(sensor)==-1 || ultrasonicGet(sensor)>250){
+      if(check){
+        motorSet(2, -60);
+        motorSet(3, 60);
+      }else{
+        check=true;
+      }
+    }else if(ultrasonicGet(sensor)<85){
+      check=false;
+      speed = (115-ultrasonicGet(sensor));
+      motorSet(2, -speed);
+      motorSet(3, -speed);
+      printf("**** %d \n", ultrasonicGet(sensor));
+    }else if(ultrasonicGet(sensor)>115){
+      check=false;
+      speed = (ultrasonicGet(sensor)-85);
+      motorSet(2, speed);
+      motorSet(3, speed);
+      print("check less greater than 100");
+    }else{
+      check=false;
+      motorSet(2, 0);
+      motorSet(3, 0);
+      print("check else");
+    }
+  }
+}
+
 void operatorControl() {
   int power;
   int turn;
 
     while (1) {
-
+printf("The Ultrasonic sensor value is %d \n", ultrasonicGet(sensor));
 
       if(joystickGetDigital(1, 8, JOY_UP)){
         homeShoulder(180);
@@ -103,7 +137,7 @@ void operatorControl() {
       }
 
       if(joystickGetDigital(1, 8, JOY_LEFT)){
-        follow1d();
+        follow2d();
       }
 
         power = joystickGetAnalog(1, 2); // vertical axis on left joystick
