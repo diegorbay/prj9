@@ -40,8 +40,8 @@ void homeElbow(int homePosition){
 
 
 void chassisSet(int left, int right) {
-  motorSet(2, left);
-  motorSet(3, right);
+  motorSet(2, right);
+  motorSet(3, left);
 }
 
 
@@ -105,6 +105,24 @@ void follow2d(){
   }
 }
 
+void lineFollow(){
+  while(!(joystickGetDigital(1, 5, JOY_DOWN))){
+if(analogReadCalibrated(2)>analogReadCalibrated(1) &&analogReadCalibrated(2)>analogReadCalibrated(3)){
+  motorSet(2, 30);
+  motorSet(3, 30);
+}else if(analogReadCalibrated(3)>analogReadCalibrated(1) && analogReadCalibrated(3)>=analogReadCalibrated(2)){
+  motorSet(2,-70);
+  motorSet(3, 40);
+}else if(analogReadCalibrated(1)>analogReadCalibrated(3) && analogReadCalibrated(1)>=analogReadCalibrated(2)){
+  motorSet(2, 40);
+  motorSet(3,-70);//left
+}else{
+  motorSet(2, 30);
+  motorSet(3, 30);
+}
+}
+}
+
 void operatorControl() {
   int power;
   int turn;
@@ -138,6 +156,10 @@ printf("The Ultrasonic sensor value is %d \n", ultrasonicGet(sensor));
 
       if(joystickGetDigital(1, 8, JOY_LEFT)){
         follow2d();
+      }
+
+      if(joystickGetDigital(1, 5, JOY_UP)){
+        lineFollow();
       }
 
         power = joystickGetAnalog(1, 2); // vertical axis on left joystick

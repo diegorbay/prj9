@@ -108,8 +108,8 @@ void follow2d(){
 void lineFollow(){
   while(!(joystickGetDigital(1, 5, JOY_DOWN))){
 if(analogReadCalibrated(2)>analogReadCalibrated(1) &&analogReadCalibrated(2)>analogReadCalibrated(3)){
-  motorSet(2, 30);
-  motorSet(3, 30);
+  motorSet(2, 25);
+  motorSet(3, 25);
 }else if(analogReadCalibrated(3)>analogReadCalibrated(1) && analogReadCalibrated(3)>=analogReadCalibrated(2)){
   motorSet(2,-70);
   motorSet(3, 40);
